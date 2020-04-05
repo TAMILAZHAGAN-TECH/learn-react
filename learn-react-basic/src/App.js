@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./App.css";
 import Person from "./Person/Person";
 
@@ -18,16 +18,37 @@ class App extends React.Component {
         { id: 2, name: newName, age: 20 },
         { id: 3, name: "Name 3", age: 24 },
       ],
+      showPersons: false
     });
   };
 
-  nameChangedHandler = (event) => {
+  togglePersonHandler = () => {
+    const doesShow = this.state.showPersons;
     this.setState({
-      persons: [
-        { id: 1, name: "Name 1", age: 14 },
-        { id: 2, name: event.target.value, age: 20 },
-        { id: 3, name: "Name 3", age: 24 },
-      ],
+      ...this.state,
+      showPersons: !doesShow
+    });
+  }
+
+  deletePersonsHandler = (personIndex) => {
+    let persons = [...this.state.persons];
+    persons.splice(personIndex, 1);
+    this.setState({
+      persons: persons
+    });
+  }
+
+  nameChangedHandler = (event, id) => {
+    let personIndex = this.state.persons.findIndex(p => p.id === id);
+    
+    let person = {...this.state.persons[personIndex]};
+    person.name = event.target.value;
+
+    let persons = [...this.state.persons];
+    persons[personIndex] = person;
+
+    this.setState({
+      persons: persons,
     });
   };
 
@@ -39,68 +60,33 @@ class App extends React.Component {
       padding: '8px',
       cursor: 'pointer'
     };
+
+    let persons = null;
+    if(this.state.showPersons) {
+      persons = (
+        <div>
+          {this.state.persons.map((person, index) => {
+              return <Person 
+                  name={person.name} 
+                  age={person.age} 
+                  key={person.id}
+                  click={() => this.deletePersonsHandler(index)}
+                  changed={(event) => this.nameChangedHandler(event, person.id)} />;
+            })}
+        </div>
+      );
+    }
     return (
       <div className="App">
         <h1>Class Based Component</h1>
         <button 
-          onClick={() => this.switchNameHandler('Test')}
-          style={style}>Switch Name</button>
-        <h4>This is static props</h4>
-        <Person name="Name 1" age="14" 
-          changed={this.nameChangedHandler}
-          value={this.state.persons[1].name} />
-        <Person name="Name 2" age="20" click={this.switchNameHandler.bind(this, 'Name Test')}>
-          This is a children
-        </Person>
-        <Person name="Name 3" age="22" />
-        <hr />
+          onClick={() => this.togglePersonHandler()}
+          style={style}>Toggle Persons</button>
         <h4>This is dynamic props</h4>
-        {this.state.persons.map((person) => {
-          return <Person name={person.name} age={person.age} key={person.id} />;
-        })}
+        { persons }
       </div>
     );
   }
 }
-
-// const App = () => {
-//   const [personState, setPersonState] = useState({
-//     persons: [
-//       { id: 1, name: "Name 1", age: 14 },
-//       { id: 2, name: "Name 2", age: 20 },
-//       { id: 3, name: "Name 3", age: 22 },
-//     ],
-//   })
-//   const switchNameHandler = () => {
-//       console.log("Was clicked!");
-//       setPersonState({
-//         persons: [
-//           { id: 1, name: "Name 1", age: 14 },
-//           { id: 2, name: "Name-2", age: 20 },
-//           { id: 3, name: "Name 3", age: 24 },
-//         ],
-//       });
-//     };
-//   return (
-//     <div className="App">
-//       <h1>Functional Component</h1>
-//       <button onClick={switchNameHandler}>Switch Name</button>
-//         <h4>This is static props</h4>
-//         <Person name="Name 1" age="14" />
-//         <Person name="Name 2" age="20">
-//           This is a children
-//         </Person>
-//         <hr />
-//         <Person name="Name 3" age="22" />
-//         <h4>This is dynamic props</h4>
-//         {personState.persons.map((person) => {
-//           return <Person 
-//                     name={person.name} 
-//                     age={person.age} 
-//                     key={person.id} />;
-//         })}
-//     </div>
-//   );
-// }
 
 export default App;
