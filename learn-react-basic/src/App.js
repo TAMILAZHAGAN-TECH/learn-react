@@ -1,7 +1,7 @@
 import React from "react";
 import styled from 'styled-components'
 
-import "./App.css";
+import clasess from "./App.module.css";
 import Person from "./Person/Person";
 
 class App extends React.Component {
@@ -95,15 +95,15 @@ class App extends React.Component {
       );
       // style.backgroundColor = 'red';
     }
-    const classes = [];
+    const assingedClasess = [];
     if(this.state.persons.length <= 2) {
-      classes.push("red");
+      assingedClasess.push("red");
     }
     if(this.state.persons.length <= 1) {
-      classes.push("bold");
+      assingedClasess.push("bold");
     }
     return (
-      <div className="App">
+      <div className={clasess.App}>
         <h1>Class Based Component</h1>
         {/* <StyledButton 
           showPersons={this.state.showPersons}
@@ -112,10 +112,10 @@ class App extends React.Component {
         </StyledButton> */}
         <button 
           onClick={() => this.togglePersonHandler()} 
-          className="button" >
+          className={clasess.button} >
           Toggle Persons
         </button>
-        <p className={classes.join(' ')}>This is dynamic props</p>
+        <p className={assingedClasess.join(' ')}>This is dynamic props</p>
         {persons}
       </div>
     );

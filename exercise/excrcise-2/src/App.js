@@ -1,5 +1,5 @@
 import React from "react";
-import "./App.css";
+import clasess from "./App.module.css";
 import Validation from "./Validation/Validation";
 import Char from "./Char/Char";
 
@@ -29,7 +29,7 @@ class App extends React.Component {
         click={() => this.removeChar(index)} />
     })
     return (
-      <div className="App">
+      <div className={clasess.App}>
         <h1>Excrcise 2</h1>
         <input
           type="text"
