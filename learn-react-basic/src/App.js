@@ -1,4 +1,6 @@
 import React from "react";
+import styled from 'styled-components'
+
 import "./App.css";
 import Person from "./Person/Person";
 
@@ -18,7 +20,7 @@ class App extends React.Component {
         { id: 2, name: newName, age: 20 },
         { id: 3, name: "Name 3", age: 24 },
       ],
-      showPersons: false
+      showPersons: false,
     });
   };
 
@@ -26,22 +28,22 @@ class App extends React.Component {
     const doesShow = this.state.showPersons;
     this.setState({
       ...this.state,
-      showPersons: !doesShow
+      showPersons: !doesShow,
     });
-  }
+  };
 
   deletePersonsHandler = (personIndex) => {
     let persons = [...this.state.persons];
     persons.splice(personIndex, 1);
     this.setState({
-      persons: persons
+      persons: persons,
     });
-  }
+  };
 
   nameChangedHandler = (event, id) => {
-    let personIndex = this.state.persons.findIndex(p => p.id === id);
-    
-    let person = {...this.state.persons[personIndex]};
+    let personIndex = this.state.persons.findIndex((p) => p.id === id);
+
+    let person = { ...this.state.persons[personIndex] };
     person.name = event.target.value;
 
     let persons = [...this.state.persons];
@@ -53,37 +55,68 @@ class App extends React.Component {
   };
 
   render() {
-    const style = {
-      backgroundColor: 'white',
-      font: 'inherit',
-      border: '1px solid blue',
-      padding: '8px',
-      cursor: 'pointer'
-    };
+    // const style = {
+    //   backgroundColor: "green",
+    //   color: "white",
+    //   font: "inherit",
+    //   border: "1px solid blue",
+    //   padding: "8px",
+    //   cursor: "pointer",
+    // };
+    const StyledButton = styled.button`
+      background-color: ${props => props.showPersons ? 'red' : 'green'};
+      color: white;
+      font: inherit;
+      padding: 8px;
+      cursor: pointer;
+      border: none;
+      &:hover {
+        background: ${props => props.showPersons ? 'salmon' : 'lightgreen'};
+        color: black;
+      }
+    `;
 
     let persons = null;
-    if(this.state.showPersons) {
+    if (this.state.showPersons) {
       persons = (
         <div>
           {this.state.persons.map((person, index) => {
-              return <Person 
-                  name={person.name} 
-                  age={person.age} 
-                  key={person.id}
-                  click={() => this.deletePersonsHandler(index)}
-                  changed={(event) => this.nameChangedHandler(event, person.id)} />;
-            })}
+            return (
+              <Person
+                name={person.name}
+                age={person.age}
+                key={person.id}
+                click={() => this.deletePersonsHandler(index)}
+                changed={(event) => this.nameChangedHandler(event, person.id)}
+              />
+            );
+          })}
         </div>
       );
+      // style.backgroundColor = 'red';
+    }
+    const classes = [];
+    if(this.state.persons.length <= 2) {
+      classes.push("red");
+    }
+    if(this.state.persons.length <= 1) {
+      classes.push("bold");
     }
     return (
       <div className="App">
         <h1>Class Based Component</h1>
+        {/* <StyledButton 
+          showPersons={this.state.showPersons}
+          onClick={() => this.togglePersonHandler()} >
+          Toggle Persons
+        </StyledButton> */}
         <button 
-          onClick={() => this.togglePersonHandler()}
-          style={style}>Toggle Persons</button>
-        <h4>This is dynamic props</h4>
-        { persons }
+          onClick={() => this.togglePersonHandler()} 
+          className="button" >
+          Toggle Persons
+        </button>
+        <p className={classes.join(' ')}>This is dynamic props</p>
+        {persons}
       </div>
     );
   }
